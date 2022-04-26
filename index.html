@@ -21,14 +21,43 @@
         margin: 0;
         color: white;
       }
+      .selection-button {
+        background-color: white;
+        border-radius: 1rem;
+        width: 10rem;
+        height: 3rem;
+        border: 1px solid black;
+        margin: 0.5rem 0.2rem;
+      }
+      .selection-button:hover {
+        background-color: white;
+        border-radius: 1rem;
+        width: 10rem;
+        height: 3rem;
+        border: 1px solid black;
+        margin: 0.5rem 0.2rem;
+        cursor: pointer;
+      }
+      a{
+        color: black
+        text-decoration: none;
+      }
+      a:hover{
+        color: black;
+        text-decoration: none;
+      }
     </style>
   </head>
 
   <body>
     <div class="title">
       <h1>Pong</h1>
-      <button>Two Player</button>
-      <button>One Player</button>
+      <a href="">
+        <button class="selection-button">One Player</button>
+      </a>
+      <a href="">
+        <button class="selection-button">Two Player</button>
+      </a>
     </div>
   </body>
 </html>
