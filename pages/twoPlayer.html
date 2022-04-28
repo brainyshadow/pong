@@ -27,54 +27,30 @@
     <canvas id="game"></canvas>
     <script>
       const canvas = document.getElementById("game");
-      canvas.width = window.innerWidth - window.innerWidth * 0.1;         //90% width
-      canvas.height = window.innerHeight - window.innerHeight * 0.1;      //90% height
+      canvas.width = window.innerWidth - window.innerWidth * 0.1; //90% width
+      canvas.height = window.innerHeight - window.innerHeight * 0.1; //90% height
       const context = canvas.getContext("2d");
       const grid = 15;
       const paddleHeight = grid * 8; // 80
-      const maxPaddleY = canvas.height - grid - paddleHeight;
+      const maxPaddleYposition = canvas.height - grid - paddleHeight;
 
       const leftPaddle = {
-        // start in the middle of the game on the left side
         xPosition: grid * 2,
         yPosition: canvas.height / 2 - paddleHeight / 2,
         width: grid,
         height: paddleHeight,
       };
       const rightPaddle = {
-        // start in the middle of the game on the right side
         xPosition: canvas.width - grid * 3,
         yPosition: canvas.height / 2 - paddleHeight / 2,
         width: grid,
         height: paddleHeight,
       };
 
-      function collides(obj1, obj2) {
-        return (
-          obj1.xPosition < obj2.xPosition + obj2.width &&
-          obj1.xPosition + obj1.width > obj2.xPosition &&
-          obj1.yPosition < obj2.yPosition + obj2.height &&
-          obj1.yPosition + obj1.height > obj2.yPosition
-        );
-      }
-
-      // game loop
+      //Loop
       function loop() {
         requestAnimationFrame(loop);
         context.clearRect(0, 0, canvas.width, canvas.height);
-
-        // prevent paddles from going through walls
-        if (leftPaddle.yPosition < grid) {
-          leftPaddle.yPosition = grid;
-        } else if (leftPaddle.yPosition > maxPaddleY) {
-          leftPaddle.y = maxPaddleY;
-        }
-
-        if (rightPaddle.yPosition < grid) {
-          rightPaddle.yPosition = grid;
-        } else if (rightPaddle.yPosition > maxPaddleY) {
-          rightPaddle.y = maxPaddleY;
-        }
 
         // draw paddles
         context.fillStyle = "white";
