@@ -30,6 +30,7 @@
       canvas.width = window.innerWidth - window.innerWidth * 0.1; //90% width
       canvas.height = window.innerHeight - window.innerHeight * 0.1; //90% height
       const context = canvas.getContext("2d");
+      const paddleSpeed = 6;
       const grid = 15;
       const paddleHeight = grid * 8; // 80
       const maxPaddleYposition = canvas.height - grid - paddleHeight;
@@ -39,18 +40,49 @@
         yPosition: canvas.height / 2 - paddleHeight / 2,
         width: grid,
         height: paddleHeight,
+        yVelocity: 0,
       };
       const rightPaddle = {
         xPosition: canvas.width - grid * 3,
         yPosition: canvas.height / 2 - paddleHeight / 2,
         width: grid,
         height: paddleHeight,
+        yVelocity: 0,
       };
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowUp") {
+          rightPaddle.yVelocity = -paddleSpeed;
+        }
+        else if (e.key === "ArrowDown") {
+          rightPaddle.yVelocity = paddleSpeed;
+        }
+        if (e.key === "w") {
+          leftPaddle.yVelocity = -paddleSpeed;
+        }
+        else if (e.key === "s") {
+          leftPaddle.yVelocity = paddleSpeed;
+        }
+      });
+
+      document.addEventListener("keyup", function (e) {
+        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+          rightPaddle.yVelocity = 0;
+        }
+
+        if (e.key === "w" || e.key === "s") {
+          leftPaddle.yVelocity = 0;
+        }
+      });
 
       //Loop
       function loop() {
         requestAnimationFrame(loop);
         context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // move paddles by their velocity
+        leftPaddle.yPosition += leftPaddle.yVelocity;
+        rightPaddle.yPosition += rightPaddle.yVelocity;
 
         // draw paddles
         context.fillStyle = "white";
@@ -67,13 +99,12 @@
           rightPaddle.height
         );
 
-        // draw walls
+
         context.fillStyle = "lightgrey";
         context.fillRect(0, 0, canvas.width, grid);
         context.fillRect(0, canvas.height - grid, canvas.width, canvas.height);
       }
 
-      //Continually run loop
       requestAnimationFrame(loop);
     </script>
   </body>
