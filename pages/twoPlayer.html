@@ -49,6 +49,13 @@
         height: paddleHeight,
         yVelocity: 0,
       };
+      const ball = {
+        // start in the middle of the game
+        xPosition: canvas.width / 2,
+        yPosition: canvas.height / 2,
+        width: grid,
+        height: grid,
+      };
 
       document.addEventListener("keydown", function (e) {
         if (e.key === "ArrowUp") {
@@ -76,6 +83,7 @@
       //Loop
       function loop() {
         requestAnimationFrame(loop);
+
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         // move paddles by their velocity
@@ -106,6 +114,12 @@
           rightPaddle.yPosition,
           rightPaddle.width,
           rightPaddle.height
+        );
+        context.fillRect(
+          ball.xPosition,
+          ball.yPosition,
+          ball.width,
+          ball.height
         );
 
         context.fillStyle = "lightgrey";
