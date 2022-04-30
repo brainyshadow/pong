@@ -53,14 +53,12 @@
       document.addEventListener("keydown", function (e) {
         if (e.key === "ArrowUp") {
           rightPaddle.yVelocity = -paddleSpeed;
-        }
-        else if (e.key === "ArrowDown") {
+        } else if (e.key === "ArrowDown") {
           rightPaddle.yVelocity = paddleSpeed;
         }
         if (e.key === "w") {
           leftPaddle.yVelocity = -paddleSpeed;
-        }
-        else if (e.key === "s") {
+        } else if (e.key === "s") {
           leftPaddle.yVelocity = paddleSpeed;
         }
       });
@@ -84,6 +82,17 @@
         leftPaddle.yPosition += leftPaddle.yVelocity;
         rightPaddle.yPosition += rightPaddle.yVelocity;
 
+        if (leftPaddle.yPosition < grid) {
+          leftPaddle.yPosition = grid;
+        } else if (leftPaddle.yPosition > maxPaddleYposition) {
+          leftPaddle.yPosition = maxPaddleYposition;
+        }
+        if (rightPaddle.yPosition < grid) {
+          rightPaddle.yPosition = grid;
+        } else if (rightPaddle.yPosition > maxPaddleYposition) {
+          rightPaddle.yPosition = maxPaddleYposition;
+        }
+
         // draw paddles
         context.fillStyle = "white";
         context.fillRect(
@@ -98,7 +107,6 @@
           rightPaddle.width,
           rightPaddle.height
         );
-
 
         context.fillStyle = "lightgrey";
         context.fillRect(0, 0, canvas.width, grid);
