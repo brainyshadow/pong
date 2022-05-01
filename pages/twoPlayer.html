@@ -55,6 +55,8 @@
         yPosition: canvas.height / 2,
         width: grid,
         height: grid,
+        yVelocity: 0,
+        xVelocity: 0,
       };
 
       document.addEventListener("keydown", function (e) {
@@ -121,6 +123,10 @@
           ball.width,
           ball.height
         );
+
+        for (let i = grid; i < canvas.height - grid; i += grid * 2) {
+          context.fillRect(canvas.width / 2, i, grid, grid);
+        }
 
         context.fillStyle = "lightgrey";
         context.fillRect(0, 0, canvas.width, grid);
