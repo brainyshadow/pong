@@ -59,7 +59,7 @@
         width: grid,
         height: grid,
 
-        gameReset: true,
+        gameReset: false,
 
         yVelocity: ballSpeed,
         xVelocity: -ballSpeed,
@@ -151,16 +151,20 @@
           ball.width,
           ball.height
         );
-
-        if ((ball.x < 0 || ball.x > canvas.width) && !ball.resetting) {
-          ball.resetting = true;
+        console.log(ball.xPosition, canvas.width, ball.gameReset);
+        if (
+          (ball.xPosition < 0 || ball.xPosition > canvas.width) &&
+          !ball.gameReset
+        ) {
+          ball.gameReset = true;
+          console.log("Here");
 
           // give some time for the player to recover before launching the ball again
           setTimeout(() => {
             ball.gameReset = false;
-            ball.x = canvas.width / 2;
-            ball.y = canvas.height / 2;
-          }, 400);
+            ball.xPosition = canvas.width / 2;
+            ball.yPosition = canvas.height / 2;
+          }, 800);
         }
 
         if (collides(ball, leftPaddle)) {
