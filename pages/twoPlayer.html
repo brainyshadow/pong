@@ -128,6 +128,14 @@
         ball.xPosition += ball.xVelocity;
         ball.yPosition += ball.yVelocity;
 
+        if (ball.yPosition < grid) {
+          ball.yVelocity *= -1;
+          ball.yPosition = grid;
+        } else if (ball.yPosition + grid > canvas.height - grid) {
+          ball.yVelocity *= -1;
+          ball.yPosition = canvas.height - grid * 2;
+        }
+
         context.fillRect(
           ball.xPosition,
           ball.yPosition,
