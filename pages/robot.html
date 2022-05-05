@@ -38,12 +38,15 @@
       const paddleHeight = grid * 8; // 80
       const maxPaddleYposition = canvas.height - grid - paddleHeight;
 
-      const leftPaddle = {
+      const computerPaddle = {
         xPosition: grid * 2,
         yPosition: canvas.height / 2 - paddleHeight / 2,
         width: grid,
         height: paddleHeight,
         yVelocity: 0,
+        shouldMove: false,
+        nextXPosition: 0,
+        nextYPosition: 0,
       };
       const rightPaddle = {
         xPosition: canvas.width - grid * 3,
@@ -80,11 +83,6 @@
         } else if (e.key === "ArrowDown") {
           rightPaddle.yVelocity = paddleSpeed;
         }
-        if (e.key === "w") {
-          leftPaddle.yVelocity = -paddleSpeed;
-        } else if (e.key === "s") {
-          leftPaddle.yVelocity = paddleSpeed;
-        }
       });
 
       document.addEventListener("keyup", function (e) {
@@ -93,7 +91,7 @@
         }
 
         if (e.key === "w" || e.key === "s") {
-          leftPaddle.yVelocity = 0;
+          computerPaddle.yVelocity = 0;
         }
       });
 
@@ -104,13 +102,13 @@
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         // move paddles by their velocity
-        leftPaddle.yPosition += leftPaddle.yVelocity;
+        computerPaddle.yPosition += computerPaddle.yVelocity;
         rightPaddle.yPosition += rightPaddle.yVelocity;
 
-        if (leftPaddle.yPosition < grid) {
-          leftPaddle.yPosition = grid;
-        } else if (leftPaddle.yPosition > maxPaddleYposition) {
-          leftPaddle.yPosition = maxPaddleYposition;
+        if (computerPaddle.yPosition < grid) {
+          computerPaddle.yPosition = grid;
+        } else if (computerPaddle.yPosition > maxPaddleYposition) {
+          computerPaddle.yPosition = maxPaddleYposition;
         }
         if (rightPaddle.yPosition < grid) {
           rightPaddle.yPosition = grid;
@@ -121,10 +119,10 @@
         // draw paddles
         context.fillStyle = "white";
         context.fillRect(
-          leftPaddle.xPosition,
-          leftPaddle.yPosition,
-          leftPaddle.width,
-          leftPaddle.height
+          computerPaddle.xPosition,
+          computerPaddle.yPosition,
+          computerPaddle.width,
+          computerPaddle.height
         );
         context.fillRect(
           rightPaddle.xPosition,
@@ -167,12 +165,12 @@
           }, 800);
         }
 
-        if (collides(ball, leftPaddle)) {
+        if (collides(ball, computerPaddle)) {
           ball.xVelocity *= -1;
 
           // move ball next to the paddle otherwise the collision will happen again
           // in the next frame
-          ball.xPosition = leftPaddle.xPosition + leftPaddle.width;
+          ball.xPosition = computerPaddle.xPosition + computerPaddle.width;
         } else if (collides(ball, rightPaddle)) {
           ball.xVelocity *= -1;
 
