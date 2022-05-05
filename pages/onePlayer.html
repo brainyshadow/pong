@@ -44,8 +44,7 @@
         width: grid,
         height: paddleHeight,
         yVelocity: 0,
-        shouldMove: false,
-        nextXPosition: 0,
+        calculateMove: false,
         nextYPosition: 0,
       };
       const rightPaddle = {
@@ -61,9 +60,7 @@
         yPosition: canvas.height / 2,
         width: grid,
         height: grid,
-
         gameReset: false,
-
         yVelocity: ballSpeed,
         xVelocity: -ballSpeed,
       };
@@ -98,9 +95,27 @@
       //Loop
       function loop() {
         requestAnimationFrame(loop);
+        if (computerPaddle.calculateMove) {
+          let iterate = true;
+          let ballXPosition = ball.xPosition;
+          let ballYPosition = ball.yPosition;
+          let ballXVelocity = ball.xVelocity;
+          let ballYVelocity = ball.xYelocity;
+          computerPaddle.calculateMove = false;
+
+          //Calculate the next position where the paddle should be
+        }
+        if (computerPaddle.nextYPosition !== computerPaddle.yPosition) {
+          if (computerPaddle.yPosition < computerPaddle.nextYPosition) {
+            computerPaddle.yPosition += paddleSpeed;
+          } else {
+            computerPaddle.yPosition -= paddleSpeed;
+          }
+
+          //Move it until it is there
+        }
 
         context.clearRect(0, 0, canvas.width, canvas.height);
-
         // move paddles by their velocity
         computerPaddle.yPosition += computerPaddle.yVelocity;
         rightPaddle.yPosition += rightPaddle.yVelocity;
@@ -149,13 +164,11 @@
           ball.width,
           ball.height
         );
-        console.log(ball.xPosition, canvas.width, ball.gameReset);
         if (
           (ball.xPosition < 0 || ball.xPosition > canvas.width) &&
           !ball.gameReset
         ) {
           ball.gameReset = true;
-          console.log("Here");
 
           // give some time for the player to recover before launching the ball again
           setTimeout(() => {
@@ -172,6 +185,7 @@
           // in the next frame
           ball.xPosition = computerPaddle.xPosition + computerPaddle.width;
         } else if (collides(ball, rightPaddle)) {
+          computerPaddle.calculateMove = true;
           ball.xVelocity *= -1;
 
           // move ball next to the paddle otherwise the collision will happen again
