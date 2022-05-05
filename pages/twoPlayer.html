@@ -33,6 +33,7 @@
       canvas.height = window.innerHeight - window.innerHeight * 0.1; //90% height
       const context = canvas.getContext("2d");
       const paddleSpeed = 6;
+      var ballSpeed = 5;
       const grid = 15;
       const paddleHeight = grid * 8; // 80
       const maxPaddleYposition = canvas.height - grid - paddleHeight;
@@ -57,8 +58,11 @@
         yPosition: canvas.height / 2,
         width: grid,
         height: grid,
-        yVelocity: 0,
-        xVelocity: 0,
+
+        gameReset: true,
+
+        yVelocity: ballSpeed,
+        xVelocity: -ballSpeed,
       };
 
       document.addEventListener("keydown", function (e) {
@@ -119,12 +123,28 @@
           rightPaddle.width,
           rightPaddle.height
         );
+
+        // move ball by its velocity
+        ball.xPosition += ball.xVelocity;
+        ball.yPosition += ball.yVelocity;
+
         context.fillRect(
           ball.xPosition,
           ball.yPosition,
           ball.width,
           ball.height
         );
+
+        if ((ball.x < 0 || ball.x > canvas.width) && !ball.resetting) {
+          ball.resetting = true;
+
+          // give some time for the player to recover before launching the ball again
+          setTimeout(() => {
+            ball.resetting = false;
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height / 2;
+          }, 400);
+        }
 
         for (let i = grid; i < canvas.height - grid; i += grid * 2) {
           context.fillRect(canvas.width / 2, i, grid, grid);
