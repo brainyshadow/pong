@@ -44,7 +44,7 @@
         width: grid,
         height: paddleHeight,
         yVelocity: 0,
-        calculateMove: false,
+        calculateMove: true,
         nextYPosition: 0,
       };
       const rightPaddle = {
@@ -105,7 +105,11 @@
 
           //Calculate the next position where the paddle should be
         }
-        if (computerPaddle.nextYPosition !== computerPaddle.yPosition) {
+        if (
+          computerPaddle.nextYPosition + paddleSpeed <
+            computerPaddle.yPosition ||
+          computerPaddle.nextYPosition - paddleSpeed > computerPaddle.yPosition
+        ) {
           if (computerPaddle.yPosition < computerPaddle.nextYPosition) {
             computerPaddle.yPosition += paddleSpeed;
           } else {
@@ -169,12 +173,14 @@
           !ball.gameReset
         ) {
           ball.gameReset = true;
-
           // give some time for the player to recover before launching the ball again
           setTimeout(() => {
             ball.gameReset = false;
             ball.xPosition = canvas.width / 2;
             ball.yPosition = canvas.height / 2;
+            if (ball.xVelocity < 0) {
+              computerPaddle.calculateMove = true;
+            }
           }, 800);
         }
 
