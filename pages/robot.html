@@ -1,11 +1,196 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Pong</title>
-    <link rel="icon" href="../media/logo.png" />
-    <meta charset="UTF-8" />
-    <style></style>
-  </head>
+    <link rel="icon" href="../media/logo.ico" />
 
-  <body></body>
+    <title>Two Player Pong</title>
+
+    <meta charset="UTF-8" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        padding: 0;
+        background: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+    <script>
+      const canvas = document.getElementById("game");
+      canvas.width = window.innerWidth - window.innerWidth * 0.1; //90% width
+      canvas.height = window.innerHeight - window.innerHeight * 0.1; //90% height
+      const context = canvas.getContext("2d");
+      const paddleSpeed = 6;
+      var ballSpeed = 5;
+      const grid = 15;
+      const paddleHeight = grid * 8; // 80
+      const maxPaddleYposition = canvas.height - grid - paddleHeight;
+
+      const leftPaddle = {
+        xPosition: grid * 2,
+        yPosition: canvas.height / 2 - paddleHeight / 2,
+        width: grid,
+        height: paddleHeight,
+        yVelocity: 0,
+      };
+      const rightPaddle = {
+        xPosition: canvas.width - grid * 3,
+        yPosition: canvas.height / 2 - paddleHeight / 2,
+        width: grid,
+        height: paddleHeight,
+        yVelocity: 0,
+      };
+      const ball = {
+        // start in the middle of the game
+        xPosition: canvas.width / 2,
+        yPosition: canvas.height / 2,
+        width: grid,
+        height: grid,
+
+        gameReset: false,
+
+        yVelocity: ballSpeed,
+        xVelocity: -ballSpeed,
+      };
+
+      function collides(obj1, obj2) {
+        return (
+          obj1.xPosition < obj2.xPosition + obj2.width &&
+          obj1.xPosition + obj1.width > obj2.xPosition &&
+          obj1.yPosition < obj2.yPosition + obj2.height &&
+          obj1.yPosition + obj1.height > obj2.yPosition
+        );
+      }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowUp") {
+          rightPaddle.yVelocity = -paddleSpeed;
+        } else if (e.key === "ArrowDown") {
+          rightPaddle.yVelocity = paddleSpeed;
+        }
+        if (e.key === "w") {
+          leftPaddle.yVelocity = -paddleSpeed;
+        } else if (e.key === "s") {
+          leftPaddle.yVelocity = paddleSpeed;
+        }
+      });
+
+      document.addEventListener("keyup", function (e) {
+        if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+          rightPaddle.yVelocity = 0;
+        }
+
+        if (e.key === "w" || e.key === "s") {
+          leftPaddle.yVelocity = 0;
+        }
+      });
+
+      //Loop
+      function loop() {
+        requestAnimationFrame(loop);
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // move paddles by their velocity
+        leftPaddle.yPosition += leftPaddle.yVelocity;
+        rightPaddle.yPosition += rightPaddle.yVelocity;
+
+        if (leftPaddle.yPosition < grid) {
+          leftPaddle.yPosition = grid;
+        } else if (leftPaddle.yPosition > maxPaddleYposition) {
+          leftPaddle.yPosition = maxPaddleYposition;
+        }
+        if (rightPaddle.yPosition < grid) {
+          rightPaddle.yPosition = grid;
+        } else if (rightPaddle.yPosition > maxPaddleYposition) {
+          rightPaddle.yPosition = maxPaddleYposition;
+        }
+
+        // draw paddles
+        context.fillStyle = "white";
+        context.fillRect(
+          leftPaddle.xPosition,
+          leftPaddle.yPosition,
+          leftPaddle.width,
+          leftPaddle.height
+        );
+        context.fillRect(
+          rightPaddle.xPosition,
+          rightPaddle.yPosition,
+          rightPaddle.width,
+          rightPaddle.height
+        );
+
+        // move ball by its velocity
+        ball.xPosition += ball.xVelocity;
+        ball.yPosition += ball.yVelocity;
+
+        if (ball.yPosition < grid) {
+          ball.yVelocity *= -1;
+          ball.yPosition = grid;
+        } else if (ball.yPosition + grid > canvas.height - grid) {
+          ball.yVelocity *= -1;
+          ball.yPosition = canvas.height - grid * 2;
+        }
+
+        context.fillRect(
+          ball.xPosition,
+          ball.yPosition,
+          ball.width,
+          ball.height
+        );
+        console.log(ball.xPosition, canvas.width, ball.gameReset);
+        if (
+          (ball.xPosition < 0 || ball.xPosition > canvas.width) &&
+          !ball.gameReset
+        ) {
+          ball.gameReset = true;
+          console.log("Here");
+
+          // give some time for the player to recover before launching the ball again
+          setTimeout(() => {
+            ball.gameReset = false;
+            ball.xPosition = canvas.width / 2;
+            ball.yPosition = canvas.height / 2;
+          }, 800);
+        }
+
+        if (collides(ball, leftPaddle)) {
+          ball.xVelocity *= -1;
+
+          // move ball next to the paddle otherwise the collision will happen again
+          // in the next frame
+          ball.xPosition = leftPaddle.xPosition + leftPaddle.width;
+        } else if (collides(ball, rightPaddle)) {
+          ball.xVelocity *= -1;
+
+          // move ball next to the paddle otherwise the collision will happen again
+          // in the next frame
+          ball.xPosition = rightPaddle.xPosition - ball.width;
+        }
+
+        for (let i = grid; i < canvas.height - grid; i += grid * 2) {
+          context.fillRect(canvas.width / 2, i, grid, grid);
+        }
+
+        context.fillStyle = "lightgrey";
+        context.fillRect(0, 0, canvas.width, grid);
+        context.fillRect(0, canvas.height - grid, canvas.width, canvas.height);
+      }
+
+      requestAnimationFrame(loop);
+    </script>
+  </body>
 </html>
