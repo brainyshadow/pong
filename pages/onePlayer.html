@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="icon" href="../media/logo.ico" />
-
-    <title>Two Player Pong</title>
+    <link rel="shortcut icon" type="image/jpg" href="../media/logo.jpg" />
+    <title>One Player</title>
 
     <meta charset="UTF-8" />
     <style>
@@ -96,8 +95,10 @@
       function loop() {
         requestAnimationFrame(loop);
         if (computerPaddle.calculateMove) {
-          let iterate = true;
           computerPaddle.calculateMove = false;
+
+          let iterate = true;
+
           let calculationBall = {
             xPosition: ball.xPosition,
             yPosition: ball.yPosition,
@@ -107,12 +108,31 @@
             xVelocity: ball.xVelocity,
           };
 
-
-          
-
-
+          while (iterate) {
+            calculationBall.xPosition += calculationBall.xVelocity;
+            calculationBall.yPosition += calculationBall.yVelocity;
+            if (calculationBall.yPosition < grid) {
+              calculationBall.yVelocity *= -1;
+              calculationBall.yPosition = grid;
+            } else if (
+              calculationBall.yPosition + grid >
+              canvas.height - grid
+            ) {
+              calculationBall.yVelocity *= -1;
+              calculationBall.yPosition = canvas.height - grid * 2;
+            }
+            if (collides(calculationBall, computerPaddle)) {
+              // move ball next to the paddle otherwise the collision will happen again
+              // in the next frame
+              calculationBall.xPosition =
+                computerPaddle.xPosition + computerPaddle.width;
+              iterate = false;
+              computerPaddle.nextYPosition = calculationBall.yPosition;
+            }
+          }
           //Calculate the next position where the paddle should be
         }
+
         if (
           computerPaddle.nextYPosition + paddleSpeed <
             computerPaddle.yPosition ||
@@ -199,12 +219,12 @@
           // in the next frame
           ball.xPosition = computerPaddle.xPosition + computerPaddle.width;
         } else if (collides(ball, rightPaddle)) {
-          computerPaddle.calculateMove = true;
           ball.xVelocity *= -1;
 
           // move ball next to the paddle otherwise the collision will happen again
           // in the next frame
           ball.xPosition = rightPaddle.xPosition - ball.width;
+          computerPaddle.calculateMove = true;
         }
 
         for (let i = grid; i < canvas.height - grid; i += grid * 2) {
