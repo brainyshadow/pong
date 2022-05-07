@@ -97,11 +97,19 @@
         requestAnimationFrame(loop);
         if (computerPaddle.calculateMove) {
           let iterate = true;
-          let ballXPosition = ball.xPosition;
-          let ballYPosition = ball.yPosition;
-          let ballXVelocity = ball.xVelocity;
-          let ballYVelocity = ball.xYelocity;
           computerPaddle.calculateMove = false;
+          let calculationBall = {
+            xPosition: ball.xPosition,
+            yPosition: ball.yPosition,
+            width: ball.width,
+            height: ball.height,
+            yVelocity: ball.yVelocity,
+            xVelocity: ball.xVelocity,
+          };
+
+
+          
+
 
           //Calculate the next position where the paddle should be
         }
