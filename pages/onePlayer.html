@@ -121,7 +121,12 @@
               calculationBall.yVelocity *= -1;
               calculationBall.yPosition = canvas.height - grid * 2;
             }
-            if (collides(calculationBall, computerPaddle)) {
+            if (
+              calculationBall.xPosition + paddleSpeed <
+                computerPaddle.xPosition ||
+              calculationBall.xPosition - paddleSpeed >
+                computerPaddle.xPositions
+            ) {
               // move ball next to the paddle otherwise the collision will happen again
               // in the next frame
               calculationBall.xPosition =
