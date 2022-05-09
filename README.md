@@ -3,6 +3,8 @@
 
 This simple site uses HTML, CSS, and JavaScript to create a fun and simple pong. The game has two modes: one player and two player. The one player version allows two users to each control a paddle using the arrow keys and w and s keys.
 
+The game can be found at https://brainyshadow.github.io/pong/
+
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 <i>Brainy Shadow</i>
